@@ -6,9 +6,8 @@ namespace BankApplication
     {
         static void Main(string[] args)
         {
-
+            //Vi skapar alla variablar som vi behöver
             bool running = true;
-            bool transactionRunning = false;
             string input;
 
             bool personalCreated = false;
@@ -26,6 +25,7 @@ namespace BankApplication
 
             while (running)
             {
+                Console.Clear();
                 Console.WriteLine("Var vänlig att välj ett av följande val.");
                 Console.WriteLine("1: Kontohantering.");
                 Console.WriteLine("2: Transaktioner.");
@@ -50,8 +50,7 @@ namespace BankApplication
                                 case "1":
                                     if (personalCreated == false)
                                     {
-                                        Console.Clear();
-                                        personalAccount = new Account(userName);
+                                        personalAccount = new Account(userName, "Personkonto");
                                         personalAccount.createAccount();
                                         Console.WriteLine($"Grattis! {userName} Ditt kontonummer är: {personalAccount.getAccountNum()} och ditt saldo är: {personalAccount.getBalance()}");
                                         personalCreated = true;
@@ -65,8 +64,7 @@ namespace BankApplication
                                 case "2":
                                     if (savingsCreated == false)
                                     {
-                                        Console.Clear();
-                                        savingsAccount = new Account(userName);
+                                        savingsAccount = new Account(userName, "Sparkonto");
                                         savingsAccount.createAccount();
                                         Console.WriteLine($"Grattis! {userName} Ditt kontonummer är: {savingsAccount.getAccountNum()} och ditt saldo är: {savingsAccount.getBalance()}");
                                         savingsCreated = true;
@@ -80,8 +78,7 @@ namespace BankApplication
                                 case "3":
                                     if (InvestmentCreated == false)
                                     {
-                                        Console.Clear();
-                                        investmentAccount = new Account(userName);
+                                        investmentAccount = new Account(userName, "Invensteringskonto");
                                         investmentAccount.createAccount();
                                         Console.WriteLine($"Grattis! {userName} Ditt kontonummer är: {investmentAccount.getAccountNum()} och ditt saldo är: {investmentAccount.getBalance()}");
                                         InvestmentCreated = true;
@@ -93,7 +90,6 @@ namespace BankApplication
                                     break;
 
                                 case "4":
-                                    Console.Clear();
                                     accountRunning = false;
                                     break;
 
@@ -104,709 +100,132 @@ namespace BankApplication
                         };
                         break;
                     case "2":
-
-
+                        //Vi vill inte ha en loop på alla saker, så som här
+                        Console.Clear();
                         Console.WriteLine("Vad för konto vill du nå?");
                         Console.WriteLine("1: Personkonto");
                         Console.WriteLine("2: Sparkonto");
-                        Console.WriteLine("3: Invenstera");
+                        Console.WriteLine("3: Investeringskonto");
                         input = Console.ReadLine();
                         switch (input)
                         {
                             case "1":
-
-                                if (personalCreated == true)
-                                {
-                                    Console.WriteLine("Var vänlig skriv in ditt kontonummer");
-                                    string account = Console.ReadLine();
-
-                                    if (account == personalAccount.getAccountNum())
-                                    {
-                                        while (transactionRunning)
-                                        {
-                                            Console.WriteLine("Vad för konto skulle nå?");
-                                            Console.WriteLine("1: Insättning");
-                                            Console.WriteLine("2: Uttagning");
-                                            Console.WriteLine("3: Överför");
-                                            Console.WriteLine("4: Tillbaka");
-                                            input = Console.ReadLine();
-                                            switch (input)
-                                            {
-                                                case "1":
-                                                    Console.WriteLine("Hur mycket vill du sätta in?");
-
-                                                    string addValue = Console.ReadLine();
-                                                    try
-                                                    {
-                                                        int result = Int32.Parse(addValue);
-                                                        personalAccount.addMoney(result);
-
-                                                        Console.WriteLine($"Du har nu satt in {result} och har {personalAccount.getBalance()} på kontot");
-                                                    }
-                                                    catch (FormatException)
-                                                    {
-                                                        Console.WriteLine("Inget nummer, försök igen");
-                                                    }
-                                                    break;
-
-                                                case "2":
-                                                    Console.WriteLine("Hur mycket vill du ta ut?");
-
-                                                    string removeValue = Console.ReadLine();
-                                                    try
-                                                    {
-
-
-                                                        int result = Int32.Parse(removeValue);
-                                                      
-
-                                                        if (result >= personalAccount.getBalance())
-                                                        {
-                                                            personalAccount.removeMoney(result);
-                                                            Console.WriteLine($"Du har nu tagit ut {result} och har {personalAccount.getBalance()} på kontot");
-
-                                                        }
-                                                        else
-                                                        {
-                                                            Console.WriteLine($"Du har inte tillräckligt på ditt konto");
-                                                        }
-
-
-                                                    }
-                                                    catch (FormatException)
-                                                    {
-                                                        Console.WriteLine("Inget nummer, försök igen");
-                                                    }
-                                                    break;
-
-                                                case "3":
-
-
-                                                    Console.WriteLine("Vad för konto vill du skicka till?");
-                                                    Console.WriteLine("1: Sparkonto");
-                                                    Console.WriteLine("2: Invenstera");
-                                                    Console.WriteLine("2: Tillbaka");
-                                                    input = Console.ReadLine();
-                                                    switch (input)
-                                                    {
-
-                                                        case "1":
-                                                            if (savingsCreated == true)
-                                                            {
-                                                                Console.WriteLine("Var vänlig skriv in ditt kontonummer");
-                                                                account = Console.ReadLine();
-
-                                                                if (account == savingsAccount.getAccountNum())
-                                                                {
-
-                                                                    Console.WriteLine("Hur mycket vill du ta ut?");
-
-                                                                    string transfer = Console.ReadLine();
-                                                                    try
-                                                                    {
-                                                                        int result = Int32.Parse(transfer);
-
-                                                                        if (result >= personalAccount.getBalance())
-                                                                        {
-                                                                            savingsAccount.addMoney(result);
-                                                                            personalAccount.removeMoney(result);
-
-                                                                            Console.WriteLine($"Du har nu skickat {result} till {account}");
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            Console.WriteLine($"Du har inte tillräckligt på ditt konto");
-                                                                        }
-                                                                    }
-                                                                    catch (FormatException)
-                                                                    {
-                                                                        Console.WriteLine("Inget nummer, försök igen");
-                                                                    }
-
-                                                                }
-                                                                else
-                                                                {
-                                                                    Console.WriteLine("Inget konto hittades");
-                                                                }
-
-                                                            }
-                                                            else
-                                                            {
-                                                                Console.WriteLine("Inget sådant konto finns just nu");
-                                                            }
-                                                            break;
-
-
-                                                        case "2":
-                                                            if (InvestmentCreated == true)
-                                                            {
-                                                                Console.WriteLine("Var vänlig skriv in kontonummret till personen som du vill skicka till");
-                                                                account = Console.ReadLine();
-
-                                                                if (account == investmentAccount.getAccountNum())
-                                                                {
-
-                                                                    Console.WriteLine("Hur mycket vill du ta ut?");
-
-                                                                    string transfer = Console.ReadLine();
-                                                                    try
-                                                                    {
-                                                                        int result = Int32.Parse(transfer);
-
-                                                                        if (result >= personalAccount.getBalance())
-                                                                        {
-                                                                            investmentAccount.addMoney(result);
-                                                                            personalAccount.removeMoney(result);
-
-                                                                            Console.WriteLine($"Du har nu skickat {result} till {account}");
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            Console.WriteLine($"Du har inte tillräckligt på ditt konto");
-                                                                        }
-                                                                    }
-                                                                    catch (FormatException)
-                                                                    {
-                                                                        Console.WriteLine("Inget nummer, försök igen");
-                                                                    }
-
-                                                                }
-                                                                else
-                                                                {
-                                                                    Console.WriteLine("Inget konto hittades");
-                                                                }
-
-                                                            }
-                                                            else
-                                                            {
-                                                                Console.WriteLine("Inget sådant konto finns just nu");
-                                                            }
-                                                        break;
-
-                                                        case "3":
-                                                         break;
-
-                                                    }
-
-                                                    break;
-
-                                                case "4":
-                                                    transactionRunning = false;
-                                                    break;
-
-                                                default:
-                                                    Console.WriteLine("Jag förstår inte");
-                                                    break;
-                                            }
-
-                                        }
-                                    }
-                                    else
-                                    {
-                                        Console.WriteLine("Inget konto hittades");
-                                    }
-
-                                }
-                                else
-                                {
-                                    Console.WriteLine("Inget sådant konto finns just nu");
-                                }
+                                /*Vi skickar information i den här ordningen "Bool om konto har blivit skapat, Namn för kontot, Kontot." */
+                                /*Först är kontot som vi är inloggad som, sedan kontot som ligger i andra kolumnen, och sedan den tredje. */
+                                Transactions(personalCreated, "Personkonto", personalAccount, savingsCreated, "Sparkonto", savingsAccount, InvestmentCreated, "Investeringskonto", investmentAccount);
                                 break;
-
-
-
 
                             case "2":
-
-                                if (savingsCreated == true)
-                                {
-                                    Console.WriteLine("Var vänlig skriv in ditt kontonummer");
-                                    string account = Console.ReadLine();
-
-                                    if (account == savingsAccount.getAccountNum())
-                                    {
-                                        while (transactionRunning)
-                                        {
-                                            Console.WriteLine("Vad för konto skulle nå?");
-                                            Console.WriteLine("1: Insättning");
-                                            Console.WriteLine("2: Uttagning");
-                                            Console.WriteLine("3: Överför");
-                                            Console.WriteLine("4: Tillbaka");
-                                            input = Console.ReadLine();
-                                            switch (input)
-                                            {
-                                                case "1":
-                                                    Console.WriteLine("Hur mycket vill du sätta in?");
-
-                                                    string addValue = Console.ReadLine();
-                                                    try
-                                                    {
-                                                        int result = Int32.Parse(addValue);
-                                                        savingsAccount.addMoney(result);
-
-                                                        Console.WriteLine($"Du har nu satt in {result} och har {savingsAccount.getBalance()} på kontot");
-                                                    }
-                                                    catch (FormatException)
-                                                    {
-                                                        Console.WriteLine("Inget nummer, försök igen");
-                                                    }
-                                                    break;
-
-                                                case "2":
-                                                    Console.WriteLine("Hur mycket vill du ta ut?");
-
-                                                    string removeValue = Console.ReadLine();
-                                                    try
-                                                    {
-
-
-                                                        int result = Int32.Parse(removeValue);
-                                              
-
-                                                        if (result >= savingsAccount.getBalance())
-                                                        {
-                                                            savingsAccount.removeMoney(result);
-                                                            Console.WriteLine($"Du har nu tagit ut {result} och har {savingsAccount.getBalance()} på kontot");
-
-                                                        }
-                                                        else
-                                                        {
-                                                            Console.WriteLine($"Du har inte tillräckligt på ditt konto");
-                                                        }
-
-
-                                                    }
-                                                    catch (FormatException)
-                                                    {
-                                                        Console.WriteLine("Inget nummer, försök igen");
-                                                    }
-                                                    break;
-
-                                                case "3":
-
-
-                                                    Console.WriteLine("Vad för konto vill du skicka till?");
-                                                    Console.WriteLine("1: Personkonto");
-                                                    Console.WriteLine("2: Invenstera");
-                                                    Console.WriteLine("2: Tillbaka");
-                                                    input = Console.ReadLine();
-                                                    switch (input)
-                                                    {
-
-                                                        case "1":
-                                                            if (personalCreated == true)
-                                                            {
-                                                                Console.WriteLine("Var vänlig skriv in ditt kontonummer");
-                                                                account = Console.ReadLine();
-
-                                                                if (account == personalAccount.getAccountNum())
-                                                                {
-
-                                                                    Console.WriteLine("Hur mycket vill du ta ut?");
-
-                                                                    string transfer = Console.ReadLine();
-                                                                    try
-                                                                    {
-                                                                        int result = Int32.Parse(transfer);
-
-                                                                        if (result >= savingsAccount.getBalance())
-                                                                        {
-                                                                            savingsAccount.addMoney(result);
-                                                                            personalAccount.removeMoney(result);
-
-                                                                            Console.WriteLine($"Du har nu skickat {result} till {account}");
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            Console.WriteLine($"Du har inte tillräckligt på ditt konto");
-                                                                        }
-                                                                    }
-                                                                    catch (FormatException)
-                                                                    {
-                                                                        Console.WriteLine("Inget nummer, försök igen");
-                                                                    }
-
-                                                                }
-                                                                else
-                                                                {
-                                                                    Console.WriteLine("Inget konto hittades");
-                                                                }
-
-                                                            }
-                                                            else
-                                                            {
-                                                                Console.WriteLine("Inget sådant konto finns just nu");
-                                                            }
-                                                            break;
-
-
-                                                        case "2":
-                                                            if (InvestmentCreated == true)
-                                                            {
-                                                                Console.WriteLine("Var vänlig skriv in kontonummret till personen som du vill skicka till");
-                                                                account = Console.ReadLine();
-
-                                                                if (account == investmentAccount.getAccountNum())
-                                                                {
-
-                                                                    Console.WriteLine("Hur mycket vill du ta ut?");
-
-                                                                    string transfer = Console.ReadLine();
-                                                                    try
-                                                                    {
-                                                                        int result = Int32.Parse(transfer);
-
-                                                                        if (result >= savingsAccount.getBalance())
-                                                                        {
-                                                                            investmentAccount.addMoney(result);
-                                                                            savingsAccount.removeMoney(result);
-
-                                                                            Console.WriteLine($"Du har nu skickat {result} till {account}");
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            Console.WriteLine($"Du har inte tillräckligt på ditt konto");
-                                                                        }
-                                                                    }
-                                                                    catch (FormatException)
-                                                                    {
-                                                                        Console.WriteLine("Inget nummer, försök igen");
-                                                                    }
-
-                                                                }
-                                                                else
-                                                                {
-                                                                    Console.WriteLine("Inget konto hittades");
-                                                                }
-
-                                                            }
-                                                            else
-                                                            {
-                                                                Console.WriteLine("Inget sådant konto finns just nu");
-                                                            }
-                                                            break;
-
-                                                        case "3":
-                                                            break;
-
-                                                    }
-
-                                                    break;
-
-                                                case "4":
-                                                    transactionRunning = false;
-                                                    break;
-
-                                                default:
-                                                    Console.WriteLine("Jag förstår inte");
-                                                    break;
-                                            }
-
-                                        }
-                                    }
-                                    else
-                                    {
-                                        Console.WriteLine("Inget konto hittades");
-                                    }
-
-                                }
-                                else
-                                {
-                                    Console.WriteLine("Inget sådant konto finns just nu");
-                                }
+                                Transactions(savingsCreated, "Sparkonto", savingsAccount, InvestmentCreated, "Investeringskonto", investmentAccount, personalCreated, "Personkonto", personalAccount);
                                 break;
-
-
 
 
                             case "3":
-
-                                if (InvestmentCreated == true)
-                                {
-                                    Console.WriteLine("Var vänlig skriv in ditt kontonummer");
-                                    string account = Console.ReadLine();
-
-                                    if (account == investmentAccount.getAccountNum())
-                                    {
-                                        while (transactionRunning)
-                                        {
-                                            Console.WriteLine("Vad för konto skulle nå?");
-                                            Console.WriteLine("1: Insättning");
-                                            Console.WriteLine("2: Uttagning");
-                                            Console.WriteLine("3: Överför");
-                                            Console.WriteLine("4: Tillbaka");
-                                            input = Console.ReadLine();
-                                            switch (input)
-                                            {
-                                                case "1":
-                                                    Console.WriteLine("Hur mycket vill du sätta in?");
-
-                                                    string addValue = Console.ReadLine();
-                                                    try
-                                                    {
-                                                        int result = Int32.Parse(addValue);
-                                                        investmentAccount.addMoney(result);
-
-                                                        Console.WriteLine($"Du har nu satt in {result} och har {investmentAccount.getBalance()} på kontot");
-                                                    }
-                                                    catch (FormatException)
-                                                    {
-                                                        Console.WriteLine("Inget nummer, försök igen");
-                                                    }
-                                                    break;
-
-                                                case "2":
-                                                    Console.WriteLine("Hur mycket vill du ta ut?");
-
-                                                    string removeValue = Console.ReadLine();
-                                                    try
-                                                    {
-
-
-                                                        int result = Int32.Parse(removeValue);
-                
-
-                                                        if (result >= investmentAccount.getBalance())
-                                                        {
-                                                            investmentAccount.removeMoney(result);
-                                                            Console.WriteLine($"Du har nu tagit ut {result} och har {investmentAccount.getBalance()} på kontot");
-
-                                                        }
-                                                        else
-                                                        {
-                                                            Console.WriteLine($"Du har inte tillräckligt på ditt konto");
-                                                        }
-
-
-                                                    }
-                                                    catch (FormatException)
-                                                    {
-                                                        Console.WriteLine("Inget nummer, försök igen");
-                                                    }
-                                                    break;
-
-                                                case "3":
-
-
-                                                    Console.WriteLine("Vad för konto vill du skicka till?");
-                                                    Console.WriteLine("1: Personkonto");
-                                                    Console.WriteLine("2: Sparkonto");
-                                                    Console.WriteLine("2: Tillbaka");
-                                                    input = Console.ReadLine();
-                                                    switch (input)
-                                                    {
-
-                                                        case "1":
-                                                            if (personalCreated == true)
-                                                            {
-                                                                Console.WriteLine("Var vänlig skriv in ditt kontonummer");
-                                                                account = Console.ReadLine();
-
-                                                                if (account == personalAccount.getAccountNum())
-                                                                {
-
-                                                                    Console.WriteLine("Hur mycket vill du ta ut?");
-
-                                                                    string transfer = Console.ReadLine();
-                                                                    try
-                                                                    {
-                                                                        int result = Int32.Parse(transfer);
-
-                                                                        if (result >= investmentAccount.getBalance())
-                                                                        {
-                                                                            personalAccount.addMoney(result);
-                                                                            investmentAccount.removeMoney(result);
-
-                                                                            Console.WriteLine($"Du har nu skickat {result} till {account}");
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            Console.WriteLine($"Du har inte tillräckligt på ditt konto");
-                                                                        }
-                                                                    }
-                                                                    catch (FormatException)
-                                                                    {
-                                                                        Console.WriteLine("Inget nummer, försök igen");
-                                                                    }
-
-                                                                }
-                                                                else
-                                                                {
-                                                                    Console.WriteLine("Inget konto hittades");
-                                                                }
-
-                                                            }
-                                                            else
-                                                            {
-                                                                Console.WriteLine("Inget sådant konto finns just nu");
-                                                            }
-                                                            break;
-
-
-                                                        case "2":
-                                                            if (savingsCreated == true)
-                                                            {
-                                                                Console.WriteLine("Var vänlig skriv in kontonummret till personen som du vill skicka till");
-                                                                account = Console.ReadLine();
-
-                                                                if (account == savingsAccount.getAccountNum())
-                                                                {
-
-                                                                    Console.WriteLine("Hur mycket vill du ta ut?");
-
-                                                                    string transfer = Console.ReadLine();
-                                                                    try
-                                                                    {
-                                                                        int result = Int32.Parse(transfer);
-
-                                                                        if (result >= investmentAccount.getBalance())
-                                                                        {
-                                                                            savingsAccount.addMoney(result);
-                                                                            investmentAccount.removeMoney(result);
-
-                                                                            Console.WriteLine($"Du har nu skickat {result} till {account}");
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            Console.WriteLine($"Du har inte tillräckligt på ditt konto");
-                                                                        }
-                                                                    }
-                                                                    catch (FormatException)
-                                                                    {
-                                                                        Console.WriteLine("Inget nummer, försök igen");
-                                                                    }
-
-                                                                }
-                                                                else
-                                                                {
-                                                                    Console.WriteLine("Inget konto hittades");
-                                                                }
-
-                                                            }
-                                                            else
-                                                            {
-                                                                Console.WriteLine("Inget sådant konto finns just nu");
-                                                            }
-                                                            break;
-
-                                                        case "3":
-                                                            break;
-
-                                                    }
-
-                                                    break;
-
-                                                case "4":
-                                                    transactionRunning = false;
-                                                    break;
-
-                                                default:
-                                                    Console.WriteLine("Jag förstår inte");
-                                                    break;
-                                            }
-
-                                        }
-                                    }
-                                    else
-                                    {
-                                        Console.WriteLine("Inget konto hittades");
-                                    }
-
-                                }
-                                else
-                                {
-                                    Console.WriteLine("Inget sådant konto finns just nu");
-                                }
+                                Transactions(InvestmentCreated, "Investeringskonto", investmentAccount, personalCreated, "Personkonto", personalAccount, savingsCreated, "Sparkonto", savingsAccount);
                                 break;
 
+                            default:
+                                Console.WriteLine("Jag förstår inte, försök igen.");
+                                break;
                         }
                         break;
 
                     case "3":
 
 
-                        Console.WriteLine("Vad för konto vill du kolla?");
-                        Console.WriteLine("1: Personkonto");
-                        Console.WriteLine("2: Sparkonto");
-                        Console.WriteLine("3: Investeringskonto");
-                        Console.WriteLine("4: Tillbaka");
-                        input = Console.ReadLine();
-                        switch (input)
+                        //Vi kör en ny loop
+                        bool balanceRunning = true;
+                        while (balanceRunning)
                         {
 
-                            case "1":
-                                if (personalCreated == true)
-                                {
-                                    Console.WriteLine("Var vänlig skriv in ditt kontonummer");
-                                    string account = Console.ReadLine();
+                            Console.WriteLine("Vad för konto vill du kolla?");
+                            Console.WriteLine("1: Personkonto");
+                            Console.WriteLine("2: Sparkonto");
+                            Console.WriteLine("3: Investeringskonto");
+                            Console.WriteLine("4: Tillbaka");
+                            input = Console.ReadLine();
+                            switch (input)
+                            {
 
-                                    if (account == personalAccount.getAccountNum())
+                                case "1":
+                                    if (personalCreated == true)
                                     {
-                                        Console.WriteLine($"Du har {personalAccount.getBalance()}");
+                                        Console.Clear();
+                                        Console.WriteLine("Var vänlig skriv in ditt kontonummer");
+                                        string account = Console.ReadLine();
+
+                                        if (account == personalAccount.getAccountNum())
+                                        {
+                                            Console.WriteLine($"Du har {personalAccount.getBalance()}");
+                                        }
+                                        else
+                                        {
+                                            Console.WriteLine("Inget konto hittades");
+                                        }
+
                                     }
                                     else
                                     {
-                                        Console.WriteLine("Inget konto hittades");
+                                        Console.WriteLine("Du har inget sådant konto");
                                     }
+                                    break;
 
-                                }
-                                else
-                                {
-                                    Console.WriteLine("Inget sådant konto finns just nu");
-                                }
-                                break;
-
-                            case "2":
-                                if (savingsCreated == true)
-                                {
-                                    Console.WriteLine("Var vänlig skriv in ditt kontonummer");
-                                    string account = Console.ReadLine();
-
-                                    if (account == savingsAccount.getAccountNum())
+                                case "2":
+                                    if (savingsCreated == true)
                                     {
-                                        Console.WriteLine($"Du har {savingsAccount.getBalance()}");
+                                        Console.WriteLine("Var vänlig skriv in ditt kontonummer");
+                                        string account = Console.ReadLine();
+
+                                        if (account == savingsAccount.getAccountNum())
+                                        {
+                                            Console.WriteLine($"Du har {savingsAccount.getBalance()}");
+                                        }
+                                        else
+                                        {
+                                            Console.WriteLine("Inget konto hittades");
+                                        }
+
                                     }
                                     else
                                     {
-                                        Console.WriteLine("Inget konto hittades");
+                                        Console.WriteLine("Du har inget sådant konto");
                                     }
+                                    break;
 
-                                }
-                                else
-                                {
-                                    Console.WriteLine("Inget sådant konto finns just nu");
-                                }
-                                break;
-
-                            case "3":
-                                if (InvestmentCreated == true)
-                                {
-                                    Console.WriteLine("Var vänlig skriv in ditt kontonummer");
-                                    string account = Console.ReadLine();
-
-                                    if (account == investmentAccount.getAccountNum())
+                                case "3":
+                                    if (InvestmentCreated == true)
                                     {
-                                        Console.WriteLine($"Du har {investmentAccount.getBalance()}");
+                                        Console.WriteLine("Var vänlig skriv in ditt kontonummer");
+                                        string account = Console.ReadLine();
+
+                                        if (account == investmentAccount.getAccountNum())
+                                        {
+                                            Console.WriteLine($"Du har {investmentAccount.getBalance()}");
+                                        }
+                                        else
+                                        {
+                                            Console.WriteLine("Inget konto hittades");
+                                        }
+
                                     }
                                     else
                                     {
-                                        Console.WriteLine("Inget konto hittades");
+                                        Console.WriteLine("Du har inget sådant konto");
                                     }
-
-                                }
-                                else
-                                {
-                                    Console.WriteLine("Inget sådant konto finns just nu");
-                                }
-                                break;
+                                    break;
 
 
-                            case "4":
-                                break;
+                                case "4":
+                                    balanceRunning = false;
+                                    break;
+
+                                default:
+                                    Console.WriteLine("Jag förstår inte, försök igen.");
+                                    break;
+
+                            }
 
                         }
-
-
                         break;
 
 
@@ -814,9 +233,212 @@ namespace BankApplication
                         running = false;
                         break;
 
+                    default:
+                        Console.WriteLine("Jag förstår inte, försök igen.");
+                        break;
+
                 }
 
             };
+        }
+
+        static void Transactions(bool mainAccountCreated, string mainAccountName, Account mainAccount, bool secondAccountCreated, string secondAccountName, Account secondAccount, bool thirdAccountCreated, string thirdAccountName, Account thirdAccount)
+        {
+            //Vi kollar om kontot finns
+            if (mainAccountCreated == true)
+            {
+                Console.WriteLine("Var vänlig skriv in ditt kontonummer");
+                string account = Console.ReadLine();
+
+                //om kontot stämmer med numret som vi har skrivit in, så loggas användaren in
+                if (account == mainAccount.getAccountNum())
+                {
+                    bool running = true;
+                    while (running)
+                    {
+                        Console.WriteLine("Vad skulle du vilja göra?");
+                        Console.WriteLine("1: Insättning");
+                        Console.WriteLine("2: Uttagning");
+                        Console.WriteLine("3: Överför");
+                        Console.WriteLine("4: Tillbaka");
+                        string input = Console.ReadLine();
+                        switch (input)
+                        {
+                            case "1":
+                                Console.WriteLine("Hur mycket vill du sätta in?");
+
+                                string addValue = Console.ReadLine();
+                                try
+                                {
+                                    //Vi kollar om det är ett nummer som användaren har skrivit in.
+                                    int result = Int32.Parse(addValue);
+                                    mainAccount.addMoney(result);
+
+                                    Console.WriteLine($"Du har nu satt in {result} och har {mainAccount.getBalance()} på kontot");
+                                }
+                                catch (FormatException)
+                                {
+                                    Console.WriteLine("Inget nummer, försök igen");
+                                }
+                                break;
+
+                            case "2":
+                                Console.WriteLine("Hur mycket vill du ta ut?");
+
+                                string removeValue = Console.ReadLine();
+                                try
+                                {
+                                    int result = Int32.Parse(removeValue);
+
+                                    //Vi kollar så att det finns tillräckligt med pengar på kontot
+                                    if (result <= mainAccount.getBalance())
+                                    {
+                                        mainAccount.removeMoney(result);
+                                        Console.WriteLine($"Du har nu tagit ut {result} och har {mainAccount.getBalance()} på kontot");
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine($"Du har inte tillräckligt på ditt konto");
+                                    }
+
+                                }
+                                catch (FormatException)
+                                {
+                                    Console.WriteLine("Inget nummer, försök igen");
+                                }
+                                break;
+
+                            case "3":
+
+                                Console.WriteLine("Vad för konto vill du skicka till?");
+                                Console.WriteLine($"1: {secondAccountName}");
+                                Console.WriteLine($"2: {thirdAccountName}");
+                                Console.WriteLine("3: Tillbaka");
+                                input = Console.ReadLine();
+                                switch (input)
+                                {
+
+                                    case "1":
+                                        if (secondAccountCreated == true)
+                                        {
+                                            Console.WriteLine("Vilket konto nummer vill du skicka till?");
+                                            account = Console.ReadLine();
+
+                                            if (account == secondAccount.getAccountNum())
+                                            {
+
+                                                Console.WriteLine("Hur mycket vill du skicka?");
+
+                                                string transfer = Console.ReadLine();
+                                                try
+                                                {
+                                                    int result = Int32.Parse(transfer);
+
+                                                    if (result <= mainAccount.getBalance())
+                                                    {
+                                                        //Vi lägger till och tar bort pengar ifrån konton, så att dom överförs
+                                                        secondAccount.addMoney(result);
+                                                        mainAccount.removeMoney(result);
+
+                                                        Console.WriteLine($"Du har nu skickat {result} till {account}");
+                                                    }
+                                                    else
+                                                    {
+                                                        Console.WriteLine($"Du har inte tillräckligt på ditt konto");
+                                                    }
+                                                }
+                                                catch (FormatException)
+                                                {
+                                                    Console.WriteLine("Inget nummer, försök igen");
+                                                }
+                                            }
+                                            else
+                                            {
+                                                Console.WriteLine("Inget konto hittades");
+                                            }
+
+                                        }
+                                        else
+                                        {
+                                            Console.WriteLine("Du har inget sådant konto");
+                                        }
+                                        break;
+
+
+                                    case "2":
+                                        if (thirdAccountCreated == true)
+                                        {
+                                            Console.WriteLine("Var vänlig skriv in kontonummret till personen som du vill skicka till");
+                                            account = Console.ReadLine();
+
+                                            if (account == thirdAccount.getAccountNum())
+                                            {
+
+                                                Console.WriteLine("Hur mycket vill du ta ut?");
+
+                                                string transfer = Console.ReadLine();
+                                                try
+                                                {
+                                                    int result = Int32.Parse(transfer);
+
+                                                    if (result <= mainAccount.getBalance())
+                                                    {
+                                                        thirdAccount.addMoney(result);
+                                                        mainAccount.removeMoney(result);
+
+                                                        Console.WriteLine($"Du har nu skickat {result} till {account}");
+                                                    }
+                                                    else
+                                                    {
+                                                        Console.WriteLine($"Du har inte tillräckligt på ditt konto");
+                                                    }
+                                                }
+                                                catch (FormatException)
+                                                {
+                                                    Console.WriteLine("Inget nummer, försök igen");
+                                                }
+
+                                            }
+                                            else
+                                            {
+                                                Console.WriteLine("Inget konto hittades");
+                                            }
+
+                                        }
+                                        else
+                                        {
+                                            Console.WriteLine("Du har inget sådant konto");
+                                        }
+                                        break;
+
+                                    case "3":
+                                        break;
+
+                                }
+
+                                break;
+
+                            case "4":
+                                running = false;
+                                break;
+
+                            default:
+                                Console.WriteLine("Jag förstår inte");
+                                break;
+                        }
+
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Inget konto hittades");
+                }
+
+            }
+            else
+            {
+                Console.WriteLine("Du har inget sådant konto");
+            }
         }
     }
 }
