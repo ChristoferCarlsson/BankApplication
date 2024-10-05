@@ -50,7 +50,7 @@ namespace BankApplication
                                 case "1":
                                     if (personalCreated == false)
                                     {
-                                        personalAccount = new Account(userName, "Personkonto");
+                                        personalAccount = new Account(userName);
                                         personalAccount.createAccount();
                                         Console.WriteLine($"Grattis! {userName} Ditt kontonummer är: {personalAccount.getAccountNum()} och ditt saldo är: {personalAccount.getBalance()}");
                                         personalCreated = true;
@@ -64,7 +64,7 @@ namespace BankApplication
                                 case "2":
                                     if (savingsCreated == false)
                                     {
-                                        savingsAccount = new Account(userName, "Sparkonto");
+                                        savingsAccount = new Account(userName);
                                         savingsAccount.createAccount();
                                         Console.WriteLine($"Grattis! {userName} Ditt kontonummer är: {savingsAccount.getAccountNum()} och ditt saldo är: {savingsAccount.getBalance()}");
                                         savingsCreated = true;
@@ -78,7 +78,7 @@ namespace BankApplication
                                 case "3":
                                     if (InvestmentCreated == false)
                                     {
-                                        investmentAccount = new Account(userName, "Invensteringskonto");
+                                        investmentAccount = new Account(userName);
                                         investmentAccount.createAccount();
                                         Console.WriteLine($"Grattis! {userName} Ditt kontonummer är: {investmentAccount.getAccountNum()} och ditt saldo är: {investmentAccount.getBalance()}");
                                         InvestmentCreated = true;
@@ -132,7 +132,6 @@ namespace BankApplication
 
                     case "3":
 
-
                         //Vi kör en ny loop
                         bool balanceRunning = true;
                         while (balanceRunning)
@@ -150,19 +149,7 @@ namespace BankApplication
                                 case "1":
                                     if (personalCreated == true)
                                     {
-                                        Console.Clear();
-                                        Console.WriteLine("Var vänlig skriv in ditt kontonummer");
-                                        string account = Console.ReadLine();
-
-                                        if (account == personalAccount.getAccountNum())
-                                        {
-                                            Console.WriteLine($"Du har {personalAccount.getBalance()}");
-                                        }
-                                        else
-                                        {
-                                            Console.WriteLine("Inget konto hittades");
-                                        }
-
+                                        GetBalance(personalAccount);
                                     }
                                     else
                                     {
@@ -173,18 +160,7 @@ namespace BankApplication
                                 case "2":
                                     if (savingsCreated == true)
                                     {
-                                        Console.WriteLine("Var vänlig skriv in ditt kontonummer");
-                                        string account = Console.ReadLine();
-
-                                        if (account == savingsAccount.getAccountNum())
-                                        {
-                                            Console.WriteLine($"Du har {savingsAccount.getBalance()}");
-                                        }
-                                        else
-                                        {
-                                            Console.WriteLine("Inget konto hittades");
-                                        }
-
+                                        GetBalance(savingsAccount);
                                     }
                                     else
                                     {
@@ -195,18 +171,7 @@ namespace BankApplication
                                 case "3":
                                     if (InvestmentCreated == true)
                                     {
-                                        Console.WriteLine("Var vänlig skriv in ditt kontonummer");
-                                        string account = Console.ReadLine();
-
-                                        if (account == investmentAccount.getAccountNum())
-                                        {
-                                            Console.WriteLine($"Du har {investmentAccount.getBalance()}");
-                                        }
-                                        else
-                                        {
-                                            Console.WriteLine("Inget konto hittades");
-                                        }
-
+                                        GetBalance(investmentAccount);
                                     }
                                     else
                                     {
@@ -222,13 +187,9 @@ namespace BankApplication
                                 default:
                                     Console.WriteLine("Jag förstår inte, försök igen.");
                                     break;
-
                             }
-
                         }
                         break;
-
-
                     case "4":
                         running = false;
                         break;
@@ -238,10 +199,41 @@ namespace BankApplication
                         break;
 
                 }
-
             };
         }
+        static void GetBalance(Account mainAccount)
+        {
+            Console.Clear();
+            Console.WriteLine("Var vänlig skriv in ditt kontonummer");
+            string account = Console.ReadLine();
 
+            if (account == mainAccount.getAccountNum())
+            {
+                Console.WriteLine($"Du har {mainAccount.getBalance()}");
+
+                //Vi frågar om användaren vill se sina transaktioner.
+                Console.WriteLine($"Vill du se dina transaktioner?");
+                Console.WriteLine($"1: Ja");
+                Console.WriteLine($"2: Nej");
+                string input = Console.ReadLine();
+                switch (input)
+                {
+                    case "1":
+                        Console.WriteLine(mainAccount.getTransactions());
+                        break;
+
+                    case "2":
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+            else
+            {
+                Console.WriteLine("Inget konto hittades");
+            }
+        }
         static void Transactions(bool mainAccountCreated, string mainAccountName, Account mainAccount, bool secondAccountCreated, string secondAccountName, Account secondAccount, bool thirdAccountCreated, string thirdAccountName, Account thirdAccount)
         {
             //Vi kollar om kontot finns
@@ -340,6 +332,10 @@ namespace BankApplication
                                                         secondAccount.addMoney(result);
                                                         mainAccount.removeMoney(result);
 
+                                                        //Vi sparar transaktionen
+                                                        secondAccount.saveTransfer(result, "recieved");
+                                                        mainAccount.saveTransfer(result, "sent");
+
                                                         Console.WriteLine($"Du har nu skickat {result} till {account}");
                                                     }
                                                     else
@@ -356,7 +352,6 @@ namespace BankApplication
                                             {
                                                 Console.WriteLine("Inget konto hittades");
                                             }
-
                                         }
                                         else
                                         {
@@ -374,7 +369,7 @@ namespace BankApplication
                                             if (account == thirdAccount.getAccountNum())
                                             {
 
-                                                Console.WriteLine("Hur mycket vill du ta ut?");
+                                                Console.WriteLine("Hur mycket vill du skicka?");
 
                                                 string transfer = Console.ReadLine();
                                                 try
@@ -385,6 +380,10 @@ namespace BankApplication
                                                     {
                                                         thirdAccount.addMoney(result);
                                                         mainAccount.removeMoney(result);
+
+                                                        //Vi sparar transaktionen
+                                                        thirdAccount.saveTransfer(result, "recieved");
+                                                        mainAccount.saveTransfer(result, "sent");
 
                                                         Console.WriteLine($"Du har nu skickat {result} till {account}");
                                                     }
@@ -433,7 +432,6 @@ namespace BankApplication
                 {
                     Console.WriteLine("Inget konto hittades");
                 }
-
             }
             else
             {
